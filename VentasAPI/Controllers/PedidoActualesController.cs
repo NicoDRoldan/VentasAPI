@@ -44,7 +44,6 @@ namespace VentasAPI.Controllers
             return vMPedidoActual;
         }
 
-
         [HttpGet("PedidosActuales")]
         public async Task<ActionResult<IEnumerable<VMPedidoActual>>> GetPedidosActuales()
         {
@@ -55,5 +54,21 @@ namespace VentasAPI.Controllers
             return pedidosActuales;
         }
 
+        [HttpGet("OrderGroup")]
+        public async Task<ActionResult<IEnumerable<VMOrderGroup>>> GetOrderGroup()
+        {
+            var order = await _context.vMPedidosActuales
+                .Where(p => p.FechaExpiracion >= DateTime.Now)
+                .GroupBy(o => new { o.NumPedido, o.Retira })
+                .Select(o => new VMOrderGroup
+                {
+                    NumPedido = o.Key.NumPedido,
+                    Retira = o.Key.Retira
+                })
+                .OrderBy(o => o.NumPedido)
+                .ToListAsync();
+
+            return order;
+        }
     }
 }
