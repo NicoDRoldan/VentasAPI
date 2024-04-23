@@ -72,5 +72,25 @@ namespace VentasAPI.Controllers
 
             return order;
         }
+
+        [HttpGet("OrderGroup/{numPedido}")]
+        public async Task<ActionResult<IEnumerable<VMOrderGroup>>> GetOrderGroup(int numPedido)
+        {
+            var order = await _context.vMPedidosActuales
+                .Include(a => a.Articulo)
+                .Where(p => p.FechaExpiracion >= DateTime.Now
+                    && p.NumPedido == numPedido)
+                .GroupBy(o => new { o.NumPedido, o.Retira })
+                .Select(o => new VMOrderGroup
+                {
+                    NumPedido = o.Key.NumPedido,
+                    Retira = o.Key.Retira,
+                    DetallePedidos = o.ToList()
+                })
+                .OrderBy(o => o.NumPedido)
+                .ToListAsync();
+
+            return order;
+        }
     }
 }
