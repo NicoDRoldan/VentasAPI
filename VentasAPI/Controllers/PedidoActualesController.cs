@@ -58,12 +58,14 @@ namespace VentasAPI.Controllers
         public async Task<ActionResult<IEnumerable<VMOrderGroup>>> GetOrderGroup()
         {
             var order = await _context.vMPedidosActuales
+                .Include(a => a.Articulo)
                 .Where(p => p.FechaExpiracion >= DateTime.Now)
                 .GroupBy(o => new { o.NumPedido, o.Retira })
                 .Select(o => new VMOrderGroup
                 {
                     NumPedido = o.Key.NumPedido,
-                    Retira = o.Key.Retira
+                    Retira = o.Key.Retira,
+                    DetallePedidos = o.ToList()
                 })
                 .OrderBy(o => o.NumPedido)
                 .ToListAsync();

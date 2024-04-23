@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace VentasAPI.Models
 {
@@ -23,7 +24,14 @@ namespace VentasAPI.Models
         [Key]
         public int Renglon { get; set; }
 
+        [JsonIgnore]
         public int Id_Articulo { get; set; }
+
+        // Propiedad de navegación para articulos:
+
+        [ForeignKey("Id_Articulo")]
+        public virtual VMArticulo Articulo { get; set; }
+        //public virtual VMArticleGroup Articulos { get; set; }
 
         public decimal Cantidad { get; set; }
 
