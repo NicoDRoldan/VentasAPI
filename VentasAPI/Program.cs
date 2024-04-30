@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using VentasAPI.Data;
+using VentasAPI.Interfaces;
+using VentasAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<MVCVentasContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MVCVentasContext")
     ?? throw new InvalidOperationException("Connection stringn 'MVCVentasContext not found.")));
+
+builder.Services.AddScoped<IPedidoActualesService, PedidoActualesService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

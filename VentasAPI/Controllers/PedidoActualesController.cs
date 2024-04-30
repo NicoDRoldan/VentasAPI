@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VentasAPI.Data;
 using VentasAPI.Models;
+using VentasAPI.Services;
+using VentasAPI.Interfaces;
 
 namespace VentasAPI.Controllers
 {
@@ -14,27 +16,25 @@ namespace VentasAPI.Controllers
     [ApiController]
     public class PedidoActualesController : ControllerBase
     {
-        private readonly MVCVentasContext _context;
+        private readonly IPedidoActualesService _iPedidoActualesService;
 
-        public PedidoActualesController(MVCVentasContext context)
+        public PedidoActualesController(IPedidoActualesService iPedidoActualesService)
         {
-            _context = context;
+            _iPedidoActualesService = iPedidoActualesService;
         }
 
         [HttpGet("AllRegister")]
         public async Task<ActionResult<IEnumerable<VMPedidoActual>>> GetvMPedidosActuales()
         {
-            return await _context.vMPedidosActuales.ToListAsync();
+            return await _iPedidoActualesService.GetvMPedidosActuales();
         }
 
         [HttpGet("{numVenta}/{numSucursal}/{codComprobante}")]
-        public async Task<ActionResult<IEnumerable<VMPedidoActual>>> GetVMPedidoActual(string numVenta, string numSucursal, string codComprobante)
+        public async Task<ActionResult<IEnumerable<VMPedidoActual>>> GetVMPedidoActual(string numVenta, 
+            string numSucursal, string codComprobante)
         {
-            var vMPedidoActual = await _context.vMPedidosActuales
-                .Where(p => p.NumVenta == numVenta
-                    && p.NumSucursal == numSucursal
-                    && p.CodComprobante == codComprobante)
-                .ToListAsync();
+            var vMPedidoActual = await _iPedidoActualesService.GetVMPedidoActual(numVenta, 
+            numSucursal, codComprobante);
 
             if (vMPedidoActual == null)
             {
@@ -47,50 +47,19 @@ namespace VentasAPI.Controllers
         [HttpGet("PedidosActuales")]
         public async Task<ActionResult<IEnumerable<VMPedidoActual>>> GetPedidosActuales()
         {
-            var pedidosActuales = await _context.vMPedidosActuales
-                .Where(p => p.FechaExpiracion >= DateTime.Now)
-                .ToListAsync();
-
-            return pedidosActuales;
+            return await _iPedidoActualesService.GetPedidosActuales();
         }
 
         [HttpGet("OrderGroup")]
         public async Task<ActionResult<IEnumerable<VMOrderGroup>>> GetOrderGroup()
         {
-            var order = await _context.vMPedidosActuales
-                .Include(a => a.Articulo)
-                .Where(p => p.FechaExpiracion >= DateTime.Now)
-                .GroupBy(o => new { o.NumPedido, o.Retira })
-                .Select(o => new VMOrderGroup
-                {
-                    NumPedido = o.Key.NumPedido,
-                    Retira = o.Key.Retira,
-                    DetallePedidos = o.ToList()
-                })
-                .OrderBy(o => o.NumPedido)
-                .ToListAsync();
-
-            return order;
+            return await _iPedidoActualesService.GetOrderGroup();
         }
 
         [HttpGet("OrderGroup/{numPedido}")]
         public async Task<ActionResult<IEnumerable<VMOrderGroup>>> GetOrderGroup(int numPedido)
         {
-            var order = await _context.vMPedidosActuales
-                .Include(a => a.Articulo)
-                .Where(p => p.FechaExpiracion >= DateTime.Now
-                    && p.NumPedido == numPedido)
-                .GroupBy(o => new { o.NumPedido, o.Retira })
-                .Select(o => new VMOrderGroup
-                {
-                    NumPedido = o.Key.NumPedido,
-                    Retira = o.Key.Retira,
-                    DetallePedidos = o.ToList()
-                })
-                .OrderBy(o => o.NumPedido)
-                .ToListAsync();
-
-            return order;
+            return await _iPedidoActualesService.GetOrderGroup(numPedido);
         }
     }
 }
