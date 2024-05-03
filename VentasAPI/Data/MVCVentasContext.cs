@@ -10,8 +10,6 @@ namespace VentasAPI.Data
 
         public DbSet<VentasAPI.Models.VMPedidoActual> vMPedidosActuales { get; set; }
 
-        public DbSet<VentasAPI.Models.VMArticulo> VMArticulos { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<VMPedidoActual>()

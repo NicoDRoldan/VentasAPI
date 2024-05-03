@@ -30,7 +30,7 @@ namespace VentasAPI.Models
         // Propiedad de navegación para articulos:
 
         [ForeignKey("Id_Articulo")]
-        public virtual VMArticulo Articulo { get; set; }
+        public virtual VMArticuloOrder Articulo { get; set; }
         //public virtual VMArticleGroup Articulos { get; set; }
 
         public decimal Cantidad { get; set; }
