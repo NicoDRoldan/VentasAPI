@@ -14,7 +14,7 @@ namespace VentasAPI.Models
 
         public bool Activo { get; set; }
 
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? Fecha { get; set; }

@@ -14,7 +14,7 @@
 
         public DateTime Hora { get; set;}
 
-        public VMFormaPago FormaPago { get; set; }
+        public VMFormaPago FormaDePago { get; set; }
 
         public VMCliente Cliente { get; set; }
 
@@ -22,8 +22,8 @@
 
         public int NumCaja { get; set; }
 
-        public VMVentaDetalle VentaDetalle { get; set; }
+        public virtual ICollection<VMVentaDetalle> VentaDetalle { get; set; }
 
-        public VMVentaImporte VentaImpore { get; set; }
+        public virtual ICollection<VMVentaImporte> VentaImporte { get; set; }
     }
 }
