@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using VentasAPI.Models;
+using VentasAPI.Services;
+using VentasAPI.Interfaces;
 
 namespace VentasAPI.Controllers
 {
@@ -9,14 +11,20 @@ namespace VentasAPI.Controllers
     [ApiController]
     public class VentasController : ControllerBase
     {
-        [HttpPost]
-        public IActionResult RecibirVenta([FromBody] object json)
-        {
-            VMVenta vMVenta = JsonConvert.DeserializeObject<VMVenta>(json.ToString());
 
-            string jsonString = json.ToString();
-            Console.WriteLine(jsonString); // Imprime el JSON en la consola
+        private readonly IVentasService _ventasService;
+
+        public VentasController(IVentasService ventasService)
+        {
+            _ventasService = ventasService;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RecibirVenta([FromBody] object json)
+        {
+            await _ventasService.RecibirVenta(json);
             return Ok();
         }
+
     }
 }
