@@ -4,6 +4,9 @@ using VentasAPI.Interfaces;
 using VentasAPI.Services;
 using Microsoft.OpenApi.Models;
 using VentasAPI.Models;
+using System.Configuration;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +51,11 @@ builder.Services.AddCors(options =>
         .AllowAnyMethod();
     });
 });
+
+var config = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .AddUserSecrets<Program>()
+    .Build();
 
 var app = builder.Build();
 

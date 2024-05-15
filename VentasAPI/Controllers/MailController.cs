@@ -13,19 +13,23 @@ namespace VentasAPI.Controllers
     public class MailController : ControllerBase
     {
         private readonly IMailService _mailService;
+        private readonly IConfiguration _config;
 
-        public MailController(IMailService mailService)
+        public MailController(IMailService mailService, IConfiguration config)
         {
             _mailService = mailService;
+            _config = config;
         }
 
         [HttpPost]
         [Route("SendMail")]
-        public async Task<IActionResult> SendEmail([FromForm] string emailFrom, [FromForm] string emailTo, [FromForm] string emailBody, [FromForm] string emailPass,[FromForm] IFormFile file)
+        public async Task<IActionResult> SendEmail([FromForm] string emailTo, [FromForm] string client, [FromForm] string emailBody, [FromForm] IFormFile file)
         {
+            string emailPass = _config["PasswordMail"];
+            string emailFrom = _config["UserNameMail"];
             try
             {
-                await _mailService.SendEmail(emailFrom, emailTo, emailBody, emailPass, file);
+                await _mailService.SendEmail(emailFrom, emailTo, client, emailBody, emailPass, file);
                 return Ok("Se envió el corre correspondiente");
             }
             catch (Exception ex)

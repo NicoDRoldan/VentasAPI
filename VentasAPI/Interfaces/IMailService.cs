@@ -5,6 +5,7 @@ namespace VentasAPI.Interfaces
 {
     public interface IMailService
     {
-        Task SendEmail([FromForm] string emailFrom, [FromForm] string emailTo, [FromForm] string emailBody, [FromForm] string emailPass, [FromForm] IFormFile file);
+        Task SendEmail([FromForm] string emailFrom, [FromForm] string emailTo, [FromForm] string client, 
+            [FromForm] string emailBody, [FromForm] string emailPass, [FromForm] IFormFile file);
     }
 }

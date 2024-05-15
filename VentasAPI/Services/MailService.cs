@@ -12,7 +12,8 @@ namespace VentasAPI.Services
     public class MailService : IMailService
     {
 
-        public async Task SendEmail([FromForm] string emailFrom, [FromForm] string emailTo, [FromForm] string emailBody, [FromForm] string emailPass, [FromForm] IFormFile file )
+        public async Task SendEmail([FromForm] string emailFrom, [FromForm] string emailTo, [FromForm] string client,
+            [FromForm] string emailBody, [FromForm] string emailPass, [FromForm] IFormFile file )
         {
             string servidor = "smtp-mail.outlook.com";
             int puerto = 587;
@@ -21,9 +22,9 @@ namespace VentasAPI.Services
             {
                 var emailMessage = new MimeMessage();
 
-                emailMessage.From.Add(new MailboxAddress("Prueba", emailFrom));
-                emailMessage.To.Add(new MailboxAddress("Destino", emailTo));
-                emailMessage.Subject = "Prueba Api .Net";
+                emailMessage.From.Add(new MailboxAddress("Ventas", emailFrom));
+                emailMessage.To.Add(new MailboxAddress(client, emailTo));
+                emailMessage.Subject = "Ventas";
 
                 var multipart = new Multipart("mixed");
 
