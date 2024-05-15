@@ -4,7 +4,6 @@ using VentasAPI.Interfaces;
 using VentasAPI.Services;
 using Microsoft.OpenApi.Models;
 using VentasAPI.Models;
-using MailKit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +17,7 @@ builder.Services.AddDbContext<MVCVentasContext>(options =>
 
 builder.Services.AddScoped<IPedidoActualesService, PedidoActualesService>();
 builder.Services.AddScoped<IVentasService, VentasService>();
+builder.Services.AddScoped<IMailService, MailService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

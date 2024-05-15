@@ -1,9 +1,10 @@
-﻿using VentasAPI.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using VentasAPI.Models;
 
 namespace VentasAPI.Interfaces
 {
     public interface IMailService
     {
-        Task<bool> SendMailAsync(MailData mailData);
+        Task SendEmail([FromForm] string emailFrom, [FromForm] string emailTo, [FromForm] string emailBody, [FromForm] string emailPass, [FromForm] IFormFile file);
     }
 }
