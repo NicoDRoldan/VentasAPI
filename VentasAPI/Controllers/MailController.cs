@@ -5,6 +5,7 @@ using VentasAPI.Interfaces;
 using VentasAPI.Models;
 using MailKit.Net.Smtp;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Serilog;
 
 namespace VentasAPI.Controllers
 {
@@ -30,10 +31,12 @@ namespace VentasAPI.Controllers
             try
             {
                 await _mailService.SendEmail(emailFrom, emailTo, client, emailBody, emailPass, file);
+                Log.Information("Metodo SendEmail() ejecutado correctamente.");
                 return Ok("Se envió el corre correspondiente");
             }
             catch (Exception ex)
             {
+                Log.Error($"Se ejecutó método SendEmail().\nError al enviar el correo: {ex.Message} \nDatos enviados: emailTo: {emailTo}; client: {client}, emailBody: {emailBody}, emailFrom: {emailFrom}");
                 return BadRequest($"Error al enviar el correo: {ex.Message}");
             }
         }

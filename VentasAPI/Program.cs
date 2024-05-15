@@ -7,6 +7,8 @@ using VentasAPI.Models;
 using System.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +58,22 @@ var config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
     .AddUserSecrets<Program>()
     .Build();
+
+builder.Configuration.AddConfiguration(config);
+
+builder.WebHost.UseUrls("https://localhost:7200");
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Logger(l => l
+        .Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Error)
+        .WriteTo.File("LogsError/Error.txt", rollingInterval: RollingInterval.Day))
+    .WriteTo.Logger(l => l
+        .Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Information)
+        .WriteTo.File("Logs/Log.txt", rollingInterval: RollingInterval.Day))
+    .WriteTo.Logger(l => l
+        .Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Warning)
+        .WriteTo.File("LogsWarning/Log.txt", rollingInterval: RollingInterval.Day))
+    .CreateLogger();
 
 var app = builder.Build();
 
